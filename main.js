@@ -34,9 +34,8 @@ $(document).ready(function(){
   };
 
   var rearrangeIframes = function(iframes, offset, width){
-    var current = offset % iframes.length;
     iframes.each(function(i, el){
-      if (i == current) {
+      if (i === offset) {
         setX(el, 0);
       } else {
         setX(el, width);
@@ -53,8 +52,6 @@ $(document).ready(function(){
   var selected = 0;
   var offset   = 0;
 
-  console.log(JSON.stringify(options));
-
   var showNext = function(){
     var t0 = new Date();
     var w = $(window).width() + options.border;
@@ -64,6 +61,7 @@ $(document).ready(function(){
     var slide = function(){
       var d = new Date() - t0;
       var r = (options.speed * d / w);
+      // sin2 0 to pi/2 gives a nice acceleration/deceleration curve:
       var x = -w * Math.pow(Math.sin(r * Math.PI / 2), 2);
       if (x > (5 - w)) { // fudge to lock to new position
         setX(current, x);
@@ -78,9 +76,7 @@ $(document).ready(function(){
     slide();
   };
 
-  rearrangeIframes(iframes, offset, $(window).width + options.border);
-  setTimeout(function(){
-    showNext();
-  }, options.showtime);
+  rearrangeIframes(iframes, offset, $(window).width() + options.border);
+  setTimeout(showNext, options.showtime);
 
 });
