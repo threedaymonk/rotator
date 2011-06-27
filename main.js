@@ -2,7 +2,9 @@ $(document).ready(function(){
   var DEFAULTS = {
     url: [],
     framewait: 20,
-    showtime: 2000
+    showtime: 2000,
+    speed: 0.6,
+    border: 100
   }
 
   var parseHash = function(hash, template){
@@ -55,13 +57,13 @@ $(document).ready(function(){
 
   var showNext = function(){
     var t0 = new Date();
-    var w = $(window).width();
+    var w = $(window).width() + options.border;
     var current = iframes[offset % iframes.length];
     var next    = iframes[(offset + 1) % iframes.length];
 
     var slide = function(){
       var d = new Date() - t0;
-      var r = (0.6 * d / w);
+      var r = (options.speed * d / w);
       var x = -w * Math.pow(Math.sin(r * Math.PI / 2), 2);
       if (x > (5 - w)) { // fudge to lock to new position
         setX(current, x);
@@ -76,7 +78,7 @@ $(document).ready(function(){
     slide();
   };
 
-  rearrangeIframes(iframes, offset, $(window).width);
+  rearrangeIframes(iframes, offset, $(window).width + options.border);
   setTimeout(function(){
     showNext();
   }, options.showtime);
