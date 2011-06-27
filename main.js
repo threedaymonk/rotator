@@ -28,7 +28,7 @@ $(document).ready(function(){
 
   var createIframes = function(urls){
     $(urls).each(function(ii, url){
-      $('body').append('<iframe src="' + url + '" />');
+      $('body').append('<iframe src="' + unescape(url) + '" />');
     });
     return $('iframe');
   };
