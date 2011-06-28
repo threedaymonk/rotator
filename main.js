@@ -77,6 +77,7 @@ $(document).ready(function(){
   };
 
   rearrangeIframes(iframes, offset, $(window).width() + options.border);
-  setTimeout(showNext, options.showtime);
-
+  if (iframes.length > 1) {
+    setTimeout(showNext, options.showtime);
+  }
 });
