@@ -1,10 +1,9 @@
 $(document).ready(function(){
   var DEFAULTS = {
     url: [],
-    framewait: 20,
-    showtime: 2000,
-    speed: 0.6,
-    border: 100
+    interval: 5, // s
+    speed: 2, // s
+    border: 50
   }
 
   var parseHash = function(hash, template){
@@ -34,6 +33,7 @@ $(document).ready(function(){
   };
 
   var rearrangeIframes = function(iframes, offset, width){
+    $('iframe').css('-webkit-transition-duration', '0');
     iframes.each(function(i, el){
       if (i === offset) {
         setX(el, 0);
@@ -58,26 +58,20 @@ $(document).ready(function(){
     var current = iframes[offset % iframes.length];
     var next    = iframes[(offset + 1) % iframes.length];
 
-    var slide = function(){
-      var d = new Date() - t0;
-      var r = (options.speed * d / w);
-      // sin2 0 to pi/2 gives a nice acceleration/deceleration curve:
-      var x = -w * Math.pow(Math.sin(r * Math.PI / 2), 2);
-      if (x > (5 - w)) { // fudge to lock to new position
-        setX(current, x);
-        setX(next, x + w);
-        setTimeout(slide, options.framewait);
-      } else {
-        offset = (offset + 1) % iframes.length;
-        rearrangeIframes(iframes, offset, w);
-        setTimeout(showNext, options.showtime);
-      }
-    };
-    slide();
+    $('iframe').css('-webkit-transition-duration', options.speed + 's');
+    setX(current, -w);
+    setX(next, 0);
+
+    setTimeout(function(){
+      offset = (offset + 1) % iframes.length;
+      rearrangeIframes(iframes, offset, w);
+    }, 1100);
+
+    setTimeout(showNext, options.interval * 1000);
   };
 
   rearrangeIframes(iframes, offset, $(window).width() + options.border);
   if (iframes.length > 1) {
-    setTimeout(showNext, options.showtime);
+    setTimeout(showNext, options.interval * 1000);
   }
 });

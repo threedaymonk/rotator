@@ -4,6 +4,8 @@ Rotator
 Rotate between HTML pages with a nice animation. Ideal for a build radiator or
 other information screen.
 
+Requires WebKit.
+
 Usage
 -----
 
@@ -19,7 +21,6 @@ If a URL contains a query string, the characters `?`, `&` and `=` must be escape
 
 Other parameters (with defaults):
 
-    framewait: 20    Time between animation frames (ms)
-    showtime:  2000  Time to show each page before rotating (ms)
-    speed:     0.6   Speed of rotation (arbitrary units)
+    interval:  5     Time between frames (s)
+    speed:     2     Time taken to transition (s)
     border:    100   Pixels between each page
