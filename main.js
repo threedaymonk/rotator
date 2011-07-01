@@ -47,8 +47,7 @@ $(document).ready(function(){
   // Execute a series of actions in series with a timeout between each.
   // This allows CSS changes to take effect.
   var chain = function(stages, delay){
-    var stage = stages.shift();
-    stage();
+    stages.shift()();
     if (stages.length > 0) {
       setTimeout(function(){ chain(stages) }, delay);
     }
