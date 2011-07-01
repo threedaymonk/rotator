@@ -49,7 +49,7 @@ $(document).ready(function(){
   var chain = function(stages, delay){
     stages.shift()();
     if (stages.length > 0) {
-      setTimeout(function(){ chain(stages) }, delay);
+      setTimeout(function(){ chain(stages, delay) }, delay);
     }
   };
 
