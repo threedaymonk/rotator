@@ -4,7 +4,7 @@ Rotator
 Rotate between HTML pages with a nice animation. Ideal for a build radiator or
 other information screen.
 
-Requires WebKit.
+Works well in WebKit. Works in Firefox with some occasional glitches.
 
 Usage
 -----

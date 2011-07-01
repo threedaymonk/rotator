@@ -26,25 +26,32 @@ $(document).ready(function(){
   };
 
   var createIframes = function(urls){
-    $(urls).each(function(ii, url){
-      $('body').append('<iframe src="' + unescape(url) + '" />');
+    $(urls).each(function(i, url){
+      left = (i === 0) ? 0 : $(window).width();
+      $('body').append('<iframe src="' + unescape(url) + '" style="left: ' + left + 'px" />');
     });
     return $('iframe');
   };
 
-  var rearrangeIframes = function(iframes, offset, width){
-    $('iframe').css('-webkit-transition-duration', '0');
-    iframes.each(function(i, el){
-      if (i === offset) {
-        setX(el, 0);
-      } else {
-        setX(el, width);
-      }
-    });
+  var setTransition = function(elements, property){
+    elements.
+      css('transition',         property).
+      css('-moz-transition',    property).
+      css('-webkit-transition', property);
   };
 
   var setX = function(el, x){
     $(el).css('left', x + 'px');
+  };
+
+  // Execute a series of actions in series with a timeout between each.
+  // This allows CSS changes to take effect.
+  var chain = function(stages, delay){
+    var stage = stages.shift();
+    stage();
+    if (stages.length > 0) {
+      setTimeout(function(){ chain(stages) }, delay);
+    }
   };
 
   var options  = parseHash(window.location.hash, DEFAULTS);
@@ -53,24 +60,32 @@ $(document).ready(function(){
   var offset   = 0;
 
   var showNext = function(){
-    var t0 = new Date();
+    setTimeout(showNext, options.interval * 1000);
+
     var w = $(window).width() + options.border;
-    var current = iframes[offset % iframes.length];
+    var current = iframes[offset];
     var next    = iframes[(offset + 1) % iframes.length];
 
-    $('iframe').css('-webkit-transition-duration', options.speed + 's');
-    setX(current, -w);
-    setX(next, 0);
-
-    setTimeout(function(){
-      offset = (offset + 1) % iframes.length;
-      rearrangeIframes(iframes, offset, w);
-    }, 1100);
-
-    setTimeout(showNext, options.interval * 1000);
+    chain([
+      function(){
+        setTransition(iframes, 'none');
+      },
+      function(){
+        iframes.each(function(i, el){
+          setX(el, (i === offset) ? 0 : w);
+        });
+      },
+      function(){
+        setTransition(iframes, 'left ' + options.speed + 's');
+      },
+      function(){
+        setX(current, -w);
+        setX(next, 0);
+        offset = (offset + 1) % iframes.length;
+      }
+    ], 10);
   };
 
-  rearrangeIframes(iframes, offset, $(window).width() + options.border);
   if (iframes.length > 1) {
     setTimeout(showNext, options.interval * 1000);
   }
